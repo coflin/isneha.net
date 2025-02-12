@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Sneha Irukuvajjula</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="../static/assets/sneha-favicon-32x32.png" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../static/css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="../index.html">Sneha</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../index.html#my-work">My Work</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../index.html#about">About</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href= "resume.html">Resume</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br/><br/><br/><br/><br/>
+
+        <center>
+            <div class="projects-div">
+                <h1 style="margin-left: 3%;color:#bd5d38;"> Family Feud Game </h1>
+                <br/>
+                <div class="orange-box">
+                    <h5>Want to play this game?</h5>
+                    <p>Type 'telnet 54.193.141.149 5020' on your terminal
+		            <br><br> <i class="fa-solid fa-screwdriver-wrench fa-fade" style="color: #c64600;"></i> Sorry! This game is under maintenance..
+		            </p>
+                </div>            
+
+                <p>
+                    <br><br><i>"Code is like humor. When you have to explain it, it’s bad."</i> -Cory House
+                </p>
+                <br><br><h5>Problem</h5>
+                <p>
+                    Who says we can't have a little fun with Python, huh?<br/>
+                    Story time! So, my husband and I are huge Family Feud enthusiasts. You know, that 
+                    awesome TV show with Steve Harvey? Well, as much as we'd love to have Steve drop by and 
+                    host a game night at our place, it's not in the cards.
+                    So, we decided to bring the Feud to us and hit up Target for the board game. 
+                    Turns out, the board game requires a minimum of three players (<i>1 host and 2 players</i>).
+                    In the mission of finding a 2 player Family Feud game where a computer can be our host, 
+                    we found arkadium.com which has an online version of Family Feud. But here's the catch – 
+                    you can't pick your opponent. It's a random match-up every time.
+                    <br>
+                    <i>Can I automate this in a way where a computer can be a host and 2 players get the same question
+                    exactly at the same time with Python? Heck yes!</i>
+                </p>
+
+                <br/><h5>Game Play</h5>
+                <p>
+                    Before we start coding, the first step is to understand the game play.
+                    <br><br>
+                    <img class = "python-image" src="../static/assets/gameplay.png">
+                    <br>
+                </p>
+
+                <br/><br/><h5>The Challenge</h5>
+                <p>2 players need to get the same question <u>exactly at the same time</u>.
+                <br/> 
+                I could write a python code, build the game logic and have 2 clients run the python code at the same time. 
+                However, it leaves to the possibility of human errors. Further, I don't want to give clients the power to 
+                control the code.
+                </p>
+
+
+                <br/><br/><h5>Architecture</h5>
+                <p>To address the challenges above, I decided to go with a client-server architecture.
+
+                <br/><br/>
+                <img class="small-image" src="../static/assets/familyfeud-architecture.png">
+
+                <br/><br/><b>Server Setup</b>
+                <br/>The server runs as a system service named "family_feud.service" on an AWS EC2 instance. It listens 
+                    for incoming connections on port 5020.
+
+                <br/><br/><b>Communication</b>
+                <br/>I'm using sockets for communication between the server and clients. Clients connect to the server 
+                via telnet.
+                
+                <br/><br/><b>Database Integration</b>
+                <br/>A MySQL database stores questions, answers, and corresponding score values. The server connects 
+                to the database to retrieve and manage questions during gameplay.
+                
+                <br/><br/><b>Multi Threading</b>
+                <br/>Every connected client is managed in its individual thread, enabling the server to handle multiple 
+                connections concurrently. Additionally, the implementation incorporates a barrier feature in multi-threading. 
+                When a thread is executed, it pauses to allow all other threads to complete their execution. This ensures 
+                effective synchronization, particularly in managing the flow of questions during gameplay.
+                
+                <br/><br/><b>Question Selection</b>
+                <br/>Questions are selected from the database. The server ensures questions are not reused until the 
+                entire set has been exhausted. Each question is stored as a dictionary in the database. The guesses and the scores
+                are stored as a list of dictionaries. Here's how it is retrieved:
+                <br/><br/><img class="small-image" src="../static/assets/dictionary.png">
+                
+                <br/><br/><b>Scoring Mechanism</b>
+                <br/>The scoring mechanism is based on the player's guesses compared to the survey's top answers. 
+                Retrieves the points from the SQL database.
+
+                <br/><br/><b>Continuous Integration and Deployment</b>
+                <br/>The server code is set up as a service, ensuring it remains "always-on". Automatic updates are pulled 
+                from my Git repository every minute using a cron job, keeping the game up-to-date.
+                </p>
+
+                <br/><br/><h5>Coding</h5>
+                <p>Alright! Now that we have the architecture, let's talk code now.
+                <br/><br/><b>Libraries used</b>
+                </p>
+                <iframe class = "iframe-container"
+                src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=import%2520socket%250Aimport%2520threading%250Aimport%2520time%250Aimport%2520sqlite3%250Afrom%2520loguru%2520import%2520logger"
+                style="width:50% ;height: 279px;"
+                sandbox="allow-scripts allow-same-origin">
+                </iframe>
+
+                <br/><br/>
+                <p>
+                    <i>socket</i>: Provides low-level networking operations, and it is used here to create server and client sockets for communication over the network.
+                    <br/><i>threading</i>: Used to handle multiple clients simultaneously, ensuring that the server can interact with multiple players without blocking.
+                    <br/><i>sqlite3</i>: Used here for interacting with an SQLite database named questions.db. The database contains questions and their corresponding answers for the Family Feud game.
+                    <br/><i>loguru</i>: For storing log information in a file in the game server.
+                </p>
+
+		<br/><br/><h5>Defining a Lock for Synchronization</h5>
+            <iframe class = "iframe-container"
+                src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=%2523%2520Use%2520threading.Lock%2520to%2520synchronize%2520access%2520to%2520shared%2520resources%250Ascores_lock%2520%253D%2520threading.Lock%28%29"
+                style="height: 223px;"
+                sandbox="allow-scripts allow-same-origin">
+            </iframe>
+      
+		    <p>This is to synchronize access to shared resources, ensuring thread-safe operations, particularly when updating player scores.</p>
+		
+		<br/><br/><h5>Handling Communication with multiple clients</h5>
+            <iframe
+            class = "iframe-container"
+            src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=%250Adef%2520handle_client%28client_socket%252C%2520clients%252C%2520barrier%29%253A%250A%2520%2520%2520%2520%2522%2522%2522%250A%2520%2520%2520%2520Handles%2520communication%2520with%2520a%2520connected%2520client.%250A%250A%2520%2520%2520%2520Args%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket%2520%28socket.socket%29%253A%2520The%2520socket%2520object%2520for%2520the%2520client.%250A%2520%2520%2520%2520%2520%2520%2520%2520clients%2520%28list%29%253A%2520List%2520of%2520connected%2520clients.%250A%2520%2520%2520%2520%2520%2520%2520%2520barrier%2520%28threading.Barrier%29%253A%2520Synchronization%2520barrier.%250A%250A%2520%2520%2520%2520Returns%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520None%250A%2520%2520%2520%2520%2522%2522%2522%250A%2520%2520%2520%2520try%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Send%2520a%2520welcome%2520message%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28%2522%2522%2522Welcome%2520message%2522%2522%2522%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%250A%2520%2520%2520%2520%2520%2520%2520%2520time.sleep%281%29%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28b%2522%255Cn%255Cn%2520Enter%2520your%2520name%253A%2520%2522%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520used_questions%2520%253D%2520%255B%255D%250A%2520%2520%2520%2520%2520%2520%2520%2520guesses%2520%253D%2520%255B%255D%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Receive%2520and%2520print%2520the%2520client%27s%2520name%250A%2520%2520%2520%2520%2520%2520%2520%2520username%2520%253D%2520client_socket.recv%281024%29.decode%28%2522utf-8%2522%29.strip%28%29%250A%2520%2520%2520%2520%2520%2520%2520%2520logger.info%28f%2522Client%2520%257Busername%257D%2520connected.%2522%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Add%2520the%2520client%2520to%2520the%2520list%250A%2520%2520%2520%2520%2520%2520%2520%2520clients.append%28%28client_socket%252C%2520username%29%29%250A%2520%2520%2520%2520%2520%2520%2520%2520player_scores%2520%253D%2520%255B%257Busername%253A%25200%257D%2520for%2520_%252C%2520username%2520in%2520clients%255D%250A%2520%2520%2520%2520%2520%2520%2520%2520logger.info%28f%2522CLIENT%2520INFO%253A%257Bplayer_scores%257D%2522%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Wait%2520for%25202%2520players%2520to%2520join%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28b%2522Waiting%2520for%2520another%2520player%2520to%2520join..%255Cn%2522%29%250A%2520%2520%2520%2520%2520%2520%2520%2520barrier.wait%28%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Send%2520a%2520starting%2520game%2520message%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28b%2522All%2520players%2520have%2520joined.%2520Starting%2520game%2520in%255Cn%2522%29%250A%2520%2520%2520%2520%2520%2520%2520%2520for%2520i%2520in%2520range%283%252C%25200%252C%2520-1%29%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520time.sleep%281%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28f%2522%257Bi%257D..%255Cn%2522.encode%28%2522utf-8%2522%29%29"
+            sandbox="allow-scripts allow-same-origin">
+        </iframe>      
+
+
+		<p><i>handle_client</i>: Function responsible for managing communication with a connected client.
+            <br/>
+		    <i>client_socket</i>: The socket object representing the client's connection.
+            <br/>
+		    <i>clients</i>: List of connected clients.
+            <br/>
+		    <i>barrier</i>: Synchronization barrier for coordinating game flow between players.
+            <br/>
+		    - Sends a welcome message to the client and prompts for the client's name.
+		    <br/>
+            - Receives and logs the client's name, then adds the client to the list of connected clients.
+		    <br/>
+            - Waits for another player to join using a synchronization barrier.
+		    <br/>
+            - Sends a starting game message to both players.
+		    <br/>
+		    This function handles the initial setup and ongoing communication with a single connected client. It forms the core logic for managing gameplay between the server and clients.
+		</p>
+
+        <br/><br/><h5>The gameplay</h5>
+        <iframe
+            class = "iframe-container"
+            src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=%2520%2520%2520%2520%2523%2520Get%2520a%2520random%2520question%2520and%2520send%2520it%2520to%2520the%2520client%250A%2520%2520%2520%2520for%2520question_number%2520in%2520range%281%252C%25206%29%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520question%2520%253D%2520get_next_question%28used_questions%29%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520f%2522%255Cn%255Cn%255C033%255B37m%255C033%255B1mQuestion%2520%257Bquestion_number%257D%253A%2520%257Bquestion%255B%27prompt%27%255D%257D%255C033%255B0m%255C033%255B0m%2522.encode%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2522utf-8%2522%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Simulate%2520receiving%2520the%2520client%27s%2520response%250A%2520%2520%2520%2520%2520%2520%2520%2520time.sleep%281%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Set%2520a%252030-second%2520time%2520limit%2520for%2520the%2520user%2520to%2520answer%250A%2520%2520%2520%2520%2520%2520%2520%2520time_limit%2520%253D%252030%2520%2520%2523%2520in%2520seconds%250A%2520%2520%2520%2520%2520%2520%2520%2520start_time%2520%253D%2520time.time%28%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520for%2520i%2520in%2520range%281%252C%25206%29%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28f%2522%255Cn%255C033%255B93mGuess%2520%257Bi%257D%253A%255C033%255B0m%2520%2522.encode%28%2522utf-8%2522%29%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520guess%2520%253D%2520client_socket.recv%281024%29.decode%28%2522utf-8%2522%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520guesses.append%28guess%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520if%2520time.time%28%29%2520-%2520start_time%2520%253E%2520time_limit%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28b%2522%255C033%255B91mTime%27s%2520up%21%2520Moving%2520to%2520the%2520next%2520question.%255C033%255B0m%255Cn%2522%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520break%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520logger.info%28f%2522Client%2520%257Busername%257D%2520answered%253A%2520%257Bguesses%257D%2522%29%250A%2520%2520%2520%2520%2520%2520%2520%2520logger.info%28f%2522%257Bplayer_scores%257D%2522%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520question_score%2520%253D%2520calculate_score%28question%252C%2520guesses%29%250A%2520%2520%2520%2520%2520%2520%2520%2520with%2520scores_lock%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520for%2520player_score%2520in%2520player_scores%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520if%2520username%2520%253D%253D%2520list%28player_score.keys%28%29%29%255B0%255D%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520player_score%255Busername%255D%2520%252B%253D%2520question_score%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520f%2522%255C033%255B92mYour%2520score%2520for%2520this%2520question%2520is%253A%2520%257Bquestion_score%257D%255C033%255B0m%255Cn%2522.encode%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2522utf-8%2522%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%29%250A%2520%2520%2520%2520%2520%2520%2520%2520time.sleep%281%29%250A%2520%2520%2520%2520%2520%2520%2520%2520client_socket.send%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520f%2522%255C033%255B93mYour%2520total%2520score%2520so%2520far%253A%2520%257Bplayer_score%255Busername%255D%257D%255C033%255B0m%255Cn%255Cn%2522.encode%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2522utf-8%2522%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%29%250A%2520%2520%2520%2520%2520%2520%2520%2520time.sleep%281%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Wait%2520for%2520all%2520players%2520to%2520finish%2520before%2520moving%2520to%2520the%2520next%2520question%250A%2520%2520%2520%2520%2520%2520%2520%2520barrier.wait%28%29%250A%250A%2520%2520%2520%2520final_score%2520%253D%2520print_in_box%28f%2522Your%2520final%2520score%253A%2520%257Bplayer_score%255Busername%255D%257D%2522%29%250A%250A%2520%2520%2520%2520client_socket.send%28f%2522%257Bfinal_score%257D%255Cn%255Cn%2522.encode%28%2522utf-8%2522%29%29%250A%2520%2520%2520%2520time.sleep%281%29%250A%2520%2520%2520%2520client_socket.send%28b%2522Thanks%2520for%2520playing%2520this%2520game.%2520Good%2520bye%21%2520%253A%29%2520%2522%29%250A%250Aexcept%2520Exception%2520as%2520e%253A%250A%2520%2520%2520%2520import%2520traceback%250A%250A%2520%2520%2520%2520traceback.print_exc%28%29%250A%2520%2520%2520%2520logger.error%28f%2522Error%2520handling%2520client%253A%2520%257Be%257D%2522%29%250A%250Afinally%253A%250A%2520%2520%2520%2520%2523%2520Close%2520the%2520client%2520socket%250A%2520%2520%2520%2520client_socket.close%28%29"
+            sandbox="allow-scripts allow-same-origin">
+        </iframe>
+        <p>
+        This part of the code handles the main gameplay loop for each client. Let's break it down:
+        <br/>
+        <br/>
+        <b>Sending Questions to the Client</b>
+        <br/>A loop runs five times, representing five rounds of questions.
+        <br/>Inside the loop, a random question is retrieved using the get_next_question() function.
+        <br/>The question is sent to the client along with the question number.
+        <br/>The server then waits for the client's response.
+
+        <br/><br/><b>Receiving and Processing Client's Guesses</b>
+        <br/>For each question, the server simulates receiving the client's guesses for up to five attempts.
+        <br/>The server waits for the client's guess, allowing up to 30 seconds for each guess.
+        <br/>If the client doesn't respond within the time limit, a message is sent indicating that time's up, and the server moves to the next question.
+
+        <br/><br/><b>Scoring and Feedback</b>
+        <br/>After receiving the client's guesses, the server calculates the score for the question using the calculate_score() function.
+        <br/>The server updates the player's score accordingly.
+        <br/>Feedback is sent to the client regarding their score for the current question and their total score so far.
+
+        <br/><br/><b>Synchronization and Progression</b>
+        <br/>After processing a question, the server waits for all players to finish before moving to the next question. This is achieved using the synchronization barrier.
+
+        <br/><br/><b>Final Score and Farewell</b>
+        <br/>Once all questions have been answered, the server sends the client their final score.
+        <br/>A farewell message is sent to the client, indicating the end of the game.
+
+        <br/><br/><b>Error Handling and Cleanup</b>
+        <br/>The code is wrapped in a try-except block to handle any exceptions that may occur during gameplay.
+        <br/>If an error occurs, the traceback is printed, and an error message is logged.
+        <br/>Finally, the client socket is closed to release the connection resources.
+        </p>
+
+
+        <br/><br/><h5>Handling questions from a MySQL database</h5>
+        <p>
+        <iframe class = "iframe-container"
+        src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=def%2520get_next_question%28used_questions%29%253A%250A%2520%2520%2520%2520%2522%2522%2522%250A%2520%2520%2520%2520Gets%2520the%2520next%2520question%2520sequentially%2520from%2520the%2520database.%250A%250A%2520%2520%2520%2520Args%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520used_questions%2520%28list%29%253A%2520List%2520of%2520questions%2520already%2520used.%250A%250A%2520%2520%2520%2520Returns%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520dict%253A%2520The%2520next%2520question%2520from%2520the%2520database.%250A%2520%2520%2520%2520%2522%2522%2522%250A%250A%2520%2520%2520%2520conn%2520%253D%2520sqlite3.connect%28%2522questions.db%2522%29%250A%2520%2520%2520%2520cursor%2520%253D%2520conn.cursor%28%29%250A%2520%2520%2520%2520logger.info%28%2522connected%2520to%2520database%2522%29%250A%250A%2520%2520%2520%2520%2523%2520Get%2520all%2520questions%250A%2520%2520%2520%2520cursor.execute%28%2522SELECT%2520*%2520FROM%2520questions%253B%2522%29%250A%2520%2520%2520%2520all_questions%2520%253D%2520cursor.fetchall%28%29%250A%250A%2520%2520%2520%2520%2523%2520Convert%2520rows%2520to%2520dictionaries%2520for%2520easier%2520access%250A%2520%2520%2520%2520questions_dict_list%2520%253D%2520%255B%255D%250A%2520%2520%2520%2520for%2520row%2520in%2520all_questions%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520columns%2520%253D%2520%255Bcolumn%255B0%255D%2520for%2520column%2520in%2520cursor.description%255D%250A%2520%2520%2520%2520%2520%2520%2520%2520question_dict%2520%253D%2520dict%28zip%28columns%252C%2520row%29%29%250A%2520%2520%2520%2520%2520%2520%2520%2520questions_dict_list.append%28question_dict%29%250A%250A%2520%2520%2520%2520%2523%2520Filter%2520out%2520used%2520questions%250A%2520%2520%2520%2520available_questions%2520%253D%2520%255B%250A%2520%2520%2520%2520%2520%2520%2520%2520q%2520for%2520q%2520in%2520questions_dict_list%2520if%2520q%255B%2522prompt%2522%255D%2520not%2520in%2520used_questions%250A%2520%2520%2520%2520%255D%250A%250A%2520%2520%2520%2520if%2520not%2520available_questions%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Reset%2520used%2520questions%2520if%2520all%2520have%2520been%2520used%250A%2520%2520%2520%2520%2520%2520%2520%2520used_questions.clear%28%29%250A%2520%2520%2520%2520%2520%2520%2520%2520available_questions%2520%253D%2520questions_dict_list%250A%250A%2520%2520%2520%2520%2523%2520Select%2520a%2520random%2520question%2520from%2520available%2520questions%250A%2520%2520%2520%2520question%2520%253D%2520available_questions%255Blen%28used_questions%29%2520%2525%2520len%28available_questions%29%255D%250A%250A%2520%2520%2520%2520%2523%2520Add%2520the%2520used%2520question%2520to%2520the%2520list%250A%2520%2520%2520%2520used_questions.append%28question%255B%2522prompt%2522%255D%29%250A%250A%2520%2520%2520%2520conn.close%28%29%250A%2520%2520%2520%2520return%2520question"
+        sandbox="allow-scripts allow-same-origin">
+        </iframe>
+        
+        <br/><b>Input Parameter:</b>
+        <br/>used_questions: A list containing prompts of questions that have already been used.
+    
+        <br/><br/><b>Database Connection</b> 
+        <br/>The function establishes a connection to the SQLite database file named "questions.db".
+    
+        <br/><br/><b>SQL Query Execution</b> 
+        <br/>An SQL query is executed to retrieve all questions from the "questions" table in the database.
+    
+        <br/><br/><b>Conversion to Dictionaries</b> 
+        <br/>The fetched rows (questions) are converted to dictionaries for easier access. Each dictionary represents a single question.
+    
+        <br/><br/><b>Filtering Available Questions</b> 
+        <br/>The function filters out questions that have already been used by comparing their prompts with the used_questions list.
+    
+        <br/><br/><b>Handling Exhausted Questions</b> 
+        <br/>If all questions have been used, the used_questions list is cleared to reset it, and all questions become available again.
+    
+        <br/><br/><b>Selecting the Next Question</b> 
+        <br/>The next question is selected from the available questions list using modular arithmetic to cycle through the questions.
+    
+        <br/><br/><b>Updating Used Questions</b> 
+        <br/>The prompt of the selected question is added to the used_questions list to mark it as used.
+    
+        <br/><br/><b>Database Connection Closure</b> 
+        <br/>Once the question is retrieved, the database connection is closed to release resources.
+    
+        <br/><br/><b>Return Value</b> 
+        <br/>The selected question is returned to the caller for further processing.
+        </p>
+
+
+        <br/><br/><h5>Score calculation</h5>
+        <iframe
+        class = "iframe-container"
+        src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=def%2520calculate_score%28question%252C%2520guesses%29%253A%250A%2520%2520%2520%2520%2522%2522%2522%250A%2520%2520%2520%2520Calculates%2520the%2520score%2520for%2520a%2520given%2520question%2520and%2520set%2520of%2520guesses.%250A%250A%2520%2520%2520%2520Args%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520question%2520%28dict%29%253A%2520The%2520question%2520data%2520from%2520the%2520database.%250A%2520%2520%2520%2520%2520%2520%2520%2520guesses%2520%28list%29%253A%2520List%2520of%2520guesses%2520provided%2520by%2520the%2520player.%250A%250A%2520%2520%2520%2520Returns%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520int%253A%2520The%2520calculated%2520score%2520for%2520the%2520question.%250A%2520%2520%2520%2520%2522%2522%2522%250A%2520%2520%2520%2520score%2520%253D%25200%250A%2520%2520%2520%2520for%2520guess%2520in%2520guesses%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520for%2520i%2520in%2520range%281%252C%25206%29%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520if%2520guess.strip%28%29.lower%28%29%2520%253D%253D%2520question%255Bf%2522guess%257Bi%257D%2522%255D%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520logger.info%28question%255Bf%2522guess%257Bi%257D%2522%255D%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520score%2520%252B%253D%2520question%255Bf%2522guess%257Bi%257D_score%2522%255D%250A%2520%2520%2520%2520logger.info%28f%2522SCORE%253A%2520%257Bscore%257D%2522%29%250A%2520%2520%2520%2520return%2520score"
+        sandbox="allow-scripts allow-same-origin">
+      </iframe>
+      
+      
+
+        <p>
+        <br/><b>Input Parameters:</b>
+        <br/>question: A dictionary containing the question data retrieved from the database. It typically includes the prompt and possible answers with their corresponding scores.
+        <br/>guesses: A list of guesses provided by the player for the current question.
+    
+        <br/><br/><b>Initialization</b> 
+        <br/>The variable score is initialized to 0. This variable will hold the total score accumulated based on the player's guesses.
+    
+        <br/><br/><b>Iterating Over Guesses</b>
+        <br/>The function iterates over each guess provided by the player.
+    
+        <br/><br/><b>Iterating Over Possible Answers</b>
+        <br/>Within each guess loop, the function iterates over possible answers for the question. These answers are typically labeled as guess1, guess2, ..., guess5.
+    
+        <br/><br/><b>Matching Guesses</b>
+        <br/>For each guess, the function checks if it matches any of the possible answers. It does this by comparing the guess (after stripping whitespace and converting to lowercase) with the values stored in the question dictionary.
+    
+        <br/><br/><b>Calculating Score</b>
+        <br/>If a match is found, the corresponding score for that answer is added to the total score.
+    
+        <br/><br/><b>Logging</b>
+        <br/>The correct answer for each guess and the total score calculated for the question are logged using the logger module.
+    
+        <br/><br/><b>Return</b>
+        <br/>Finally, the function returns the total score calculated for the question.  
+        </p>
+
+
+        <br/><br/><h5>Stitching everything together</h5>
+        <iframe class = "iframe-container"
+        src="https://carbon.now.sh/embed?bg=rgba%28189%2C93%2C56%2C1%29&t=seti&wt=none&l=python&width=680&ds=true&dsyoff=20px&dsblur=68px&wc=true&wa=true&pv=56px&ph=56px&ln=false&fl=1&fm=Hack&fs=14px&lh=133%25&si=false&es=2x&wm=false&code=%2540logger.catch%28%29%250Adef%2520main%28%29%253A%250A%2520%2520%2520%2520%2523%2520Create%2520a%2520server%2520socket%250A%2520%2520%2520%2520server_socket%2520%253D%2520socket.socket%28socket.AF_INET%252C%2520socket.SOCK_STREAM%29%250A%250A%2520%2520%2520%2520SERVER_IP%2520%253D%2520%25220.0.0.0%2522%250A%2520%2520%2520%2520SERVER_PORT%2520%253D%25205020%250A%250A%2520%2520%2520%2520%2523%2520Bind%2520the%2520server%2520socket%2520to%2520the%2520IP%2520and%2520port%250A%2520%2520%2520%2520server_socket.bind%28%28SERVER_IP%252C%2520SERVER_PORT%29%29%250A%250A%2520%2520%2520%2520%2523%2520Listen%2520for%2520incoming%2520connections%250A%2520%2520%2520%2520server_socket.listen%282%29%250A%2520%2520%2520%2520logger.info%28f%2522Server%2520listening%2520on%2520%257BSERVER_IP%257D%253A%257BSERVER_PORT%257D%2522%29%250A%250A%2520%2520%2520%2520clients%2520%253D%2520%255B%255D%250A%250A%2520%2520%2520%2520try%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Accept%2520incoming%2520connections%250A%2520%2520%2520%2520%2520%2520%2520%2520while%2520True%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520client%252C%2520address%2520%253D%2520server_socket.accept%28%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520print%28f%2522Accepted%2520connection%2520from%2520%257Baddress%257D%2522%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520Start%2520a%2520new%2520thread%2520to%2520handle%2520the%2520client%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520threading.Thread%28%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520target%253Dhandle_client%252C%2520args%253D%28client%252C%2520clients%252C%2520barrier%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%29.start%28%29%250A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2523%2520If%2520two%2520clients%2520have%2520connected%252C%2520reset%2520the%2520barrier%2520for%2520the%2520next%2520round%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520if%2520len%28clients%29%2520%253D%253D%25202%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520barrier.reset%28%29%250A%250A%2520%2520%2520%2520except%2520Exception%2520as%2520e%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520print%28f%2522Error%2520in%2520main%2520loop%253A%2520%257Be%257D%2522%29%250A%250A%2520%2520%2520%2520finally%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520server_socket.close%28%29strip%28%29.lower%28%29%2520%253D%253D%2520question%255Bf%2522guess%257Bi%257D%2522%255D%253A%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520logger.info%28question%255Bf%2522guess%257Bi%257D%2522%255D%29%250A%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520%2520score%2520%252B%253D%2520question%255Bf%2522guess%257Bi%257D_score%2522%255D%250A%2520%2520%2520%2520logger.info%28f%2522SCORE%253A%2520%257Bscore%257D%2522%29%250A%2520%2520%2520%2520return%2520score"
+        sandbox="allow-scripts allow-same-origin">
+        </iframe>
+
+        <p>
+            This main() function serves as the entry point of the program. Let's break down its components:
+
+            <br/><br/><b>@logger.catch()</b>
+                <br/>This is a decorator from the loguru library used to catch exceptions and log them. Any exceptions that occur within the main() function will be logged automatically.
+
+            <br/><br/><b>Server Socket Creation</b>
+                <br/>server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM): Creates a server socket using the TCP/IP protocol (socket.SOCK_STREAM) and IPv4 addressing (socket.AF_INET).
+                <br/>SERVER_IP = "0.0.0.0" and SERVER_PORT = 5020: Specifies the IP address and port number on which the server will listen for incoming connections.
+
+            <br/><br/><b>Binding and Listening</b>
+                <br/>server_socket.bind((SERVER_IP, SERVER_PORT)): Binds the server socket to the specified IP address and port.
+                <br/>server_socket.listen(2): Starts listening for incoming connections. The 2 argument specifies the maximum number of queued connections.
+
+            <br/><br/><b>Logging</b>
+                <br/>logger.info(f"Server listening on {SERVER_IP}:{SERVER_PORT}"): Logs a message indicating that the server is listening on the specified IP address and port.
+
+            <br/><br/><b>Handling Incoming Connections</b>
+                <br/>The program enters a loop to continuously accept incoming client connections using server_socket.accept().
+                <br/>Upon accepting a connection, it prints a message indicating the connection's source address.
+                <br/>It then starts a new thread using threading.Thread() to handle the client, passing the handle_client function as the target. It also passes the client socket, list of clients, and synchronization barrier as arguments to the handle_client function.
+                <br/>If two clients have connected (as indicated by the length of the clients list), it resets the synchronization barrier for the next round of the game.
+
+            <br/><br/><b>Exception Handling</b>
+                <br/>The try block catches any exceptions that might occur during execution, such as errors in accepting connections or handling clients. If an exception occurs, it prints an error message.
+                <br/>The finally block ensures that the server socket is closed regardless of whether an exception occurred. This is important for cleaning up resources and releasing the port.
+
+            <br/><br/>Overall, this main() function sets up the server, listens for incoming connections, and spawns threads to handle each client connection concurrently, allowing for multiplayer functionality in the game.
+        </p>
+
+
+            <br/><br/><h5>Conclusion</h5>
+            <p>
+                My husband and I now enjoy seamless rounds of Family Feud without any hiccups. I just built my
+                own little Steve Harvey (<i>only a little less fun than him, duh!</i>).
+                The beauty of programming lies not only in its logic but also in the joy it brings. 
+                As I mentioned at the beginning of this blog, who says we can't have a little fun with Python, huh? 
+            </p>
+
+                <br/>
+                <a href="https://github.com/coflin/csci5020/tree/main/final" class="myButton">View Project on GitHub &nbsp;&nbsp;<i class="fab fa-fw fa-github" style="padding:5px;"></i></a>
+                <br/><br/><br/><br/>
+            </div>
+        </center>
+    
+        <!-- Copyright Section-->
+        <div class="copyright py-4 text-center text-white">
+            <div class="container"><small>Copyright &copy; Sneha Irukuvajjula 2023</small></div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="../static/js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+   
+    </body>
+</html>

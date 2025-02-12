@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Sneha Irukuvajjula</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="../static/assets/sneha-favicon-32x32.png" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../static/css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="../index.html">Sneha</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../index.html#my-work">My Work</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../index.html#about">About</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href= "resume.html">Resume</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br/><br/><br/><br/><br/>
+
+        <center>
+            <div class="projects-div">
+                <h1 style="margin-left: 3%;color:#bd5d38;"> The Dunder Mifflin Company </h1>
+                <br/>
+                <h5> The Dunder Mifflin Network</h5> 
+                <p> This is a scenario of a company named Dunder Mifflin. This is the fictional paper company from the 
+                    TV show 'The Office'. I am using the names of the characters from the show as my users, and I am 
+                    the System Administrator and a network of virtual machines to represent the hypothetical computer 
+                    network of the company.
+                </p>
+                <br>
+                <img class="python-image" src="../static/assets/dundermifflin.png">
+                <br><br>
+                <p>
+                    The figure above shows the Dunder-Mifflin network. The network consists of six production machines that are 
+                    initially named Machine A through Machine F.
+                    The network consists of a connection to the ISP (WAN), a Demilitarized Zone (DMZ) network and an internal 
+                    network (LAN).
+                    I will configure the machines to perform specific tasks such as being a web server, DNS server and a file 
+                    server. The articles on how I configured them can be found <a href="https://isneha.net/linux">here</a>.
+                    <br><br>
+                    <b>Machine A 100.64.0.26 (Rocky 9.2)</b>
+                    <br>This is the gateway machine and acts as a router to connect the various networks (WAN, LAN and 
+                    DMZ). This is also a DHCP Server. You can find how I configured this as a DHCP server <a href="https://isneha.net/linux/dhcp">here</a>.
+                    <br><br>
+                    <b>Machine E 10.21.32.2 (Rocky 9.2)</b>
+                    <br>This is the file server machine on the internal network. You can find how I configured the file server <a href="https://isneha.net/linux/lvm">here</a>.
+                    The machine is not directly accessible to the outside world and can only be reached by pivoting through Machine A. 
+                    It contains the home directories of all the users that can be accessed by other machines on the LAN which we don't show explicitly.
+                    <br><br>
+                    <b>Machine B 100.64.26.2 (Rocky 9.2)</b>
+                    <br>This is a DNS Server. The article on how I configured this will be up soon.
+                    <br><br>
+                    <b>Machine C 100.64.26.3 (Debian 12.1)</b>
+                    <br>This is a Web Server. The article on how I configured this will be up soon.
+                    <br><br>
+                    <b>Machine D 100.64.26.4 (Rocky 9.2)</b>
+                    <br>This is a Backup Web Server. The article on how I configured this will be up soon.
+                    <br><br>
+                    <b>Machine F 100.64.26.2 (Debian 12.1)</b>
+                    <br>This is a Backup DNS Server. The article on how I configured this will be up soon.
+                    <br>
+                    Machines B,C,D,F are on the DMZ network (100.64.26.0/24). They are accessible from the internet through Machine A.
+                    <br>All the machines run an ssh server.
+                </p>
+                <br/>
+                <h5> The Dunder Mifflin Organization Chart </h5> 
+                <br/>
+                <img class="python-image" src="../static/assets/orgchart.png">
+                <br/>
+                <br/>
+                <br/>
+                <h5>Office Employees</h5>
+    
+                <table class="dundermifflin-table">
+                    <tr>
+                        <th class="dundermifflin-th">Username</th>
+                        <th class="dundermifflin-th">Name</th>
+                        <th class="dundermifflin-th">Job Title</th>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">mscott</td>
+                        <td class="dundermifflin-td">Michael Scott</td>
+                        <td class="dundermifflin-td">Regional Manager</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">jhalpert</td>
+                        <td class="dundermifflin-td">Jim Halpert</td>
+                        <td class="dundermifflin-td">Assistant Regional Manager</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">dschrute</td>
+                        <td class="dundermifflin-td">Dwight Schrute</td>
+                        <td class="dundermifflin-td">Assistant to the Regional Manager</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">pbeesly</td>
+                        <td class="dundermifflin-td">Pam Beesly</td>
+                        <td class="dundermifflin-td">Receptionist</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">abernard</td>
+                        <td class="dundermifflin-td">Andy Bernard</td>
+                        <td class="dundermifflin-td">Regional Director in Charge of Sales</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">plapin</td>
+                        <td class="dundermifflin-td">Phyllis Lapin</td>
+                        <td class="dundermifflin-td">Sales Representative</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">shudson</td>
+                        <td class="dundermifflin-td">Stanley Hudson</td>
+                        <td class="dundermifflin-td">Sales Representative</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">amartin</td>
+                        <td class="dundermifflin-td">Angela Martin</td>
+                        <td class="dundermifflin-td">Senior Accountant</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">omartinez</td>
+                        <td class="dundermifflin-td">Oscar Martinez</td>
+                        <td class="dundermifflin-td">Accountant</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">kmalone</td>
+                        <td class="dundermifflin-td">Kevin Malone</td>
+                        <td class="dundermifflin-td">Accountant</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">dphilbin</td>
+                        <td class="dundermifflin-td">Darryl Philbin</td>
+                        <td class="dundermifflin-td">Warehouse Foreman</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">kkapoor</td>
+                        <td class="dundermifflin-td">Kelly Kapoor</td>
+                        <td class="dundermifflin-td">Customer Service Representative</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">tflenderson</td>
+                        <td class="dundermifflin-td">Toby Flenderson</td>
+                        <td class="dundermifflin-td">Human Resources</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">mpalmer</td>
+                        <td class="dundermifflin-td">Meredith Palmer</td>
+                        <td class="dundermifflin-td">Supplier Relations</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">cbratton</td>
+                        <td class="dundermifflin-td">Creed Bratton</td>
+                        <td class="dundermifflin-td">Quality Assurance Representative</td>
+                    </tr>
+                    <tr>
+                        <td class="dundermifflin-td">snir8112</td>
+                        <td class="dundermifflin-td">Sneha Irukuvajjula</td>
+                        <td class="dundermifflin-td">System Administrator</td>
+                    </tr>
+                </table>
+                <br/>
+            </div>
+        </center>
+    
+        <!-- Copyright Section-->
+        <div class="copyright py-4 text-center text-white">
+            <div class="container"><small>Copyright &copy; Sneha Irukuvajjula 2023</small></div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="../static/js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+   
+    </body>
+</html>

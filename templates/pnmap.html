@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Sneha Irukuvajjula</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="../static/assets/sneha-favicon-32x32.png" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../static/css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="../index.html">Sneha</a>
+                <button class="navbar-toggler text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../index.html#my-work">My Work</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../index.html#about">About</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href= "resume.html">Resume</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <br/><br/><br/><br/><br/>
+
+        <center>
+            <div class="projects-div">
+                <h1 style="margin-left: 3%;color:#bd5d38;"> Personal NMAP using Scapy </h1>
+                <br/><h5><i class="fa-solid fa-user-ninja"></i>&nbsp;Objective</h5>
+                <p>
+                    We're on a mission to figure out which TCP & UDP ports are playing nice and open for us. The PNMAP script is a Python tool designed for network scanning, akin to having our personal ninja to stealthily assess the status of ports on a target system or network. 
+                </p>
+                <br/><h5><i class="fa-solid fa-user-ninja"></i>&nbsp;Approach</h5>
+                <p>
+                    <i>Note: The first 1024 ports are a bit VIP or "well-known" ports, so we need to wear our "root" hats for scanning those.<br/></i>
+                    Before diving straight to coding, let's figure out how to know if a port is open or not through scapy. First, I fired up Scapy on my command-line and ran this:
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen1.png">
+                    <br/><br/>
+                    100.64.26.1 is my own Linux VM which has just port 22 open. Our end goal is that our script should only report port 22 on my Linux VM as open.
+                    We are sending a TCP Syn (<i>S</i>) flag to check if TCP is open on the given port or not. Basically, I am politely knocking on doors and checking
+                    if someone is there to respond and open the door for me.
+                    From the output, I see that it returns answered and unanswer-<i>ed</i> ports that didn't feel like chatting. Looking at it, my assumptionis that the talkative ones
+                    are open and the unanswered ones are a no-go. Let's see if my assumption is right.
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen2.png">
+                    <br/><br/>
+                    Weird. All the ports answered to the TCP SYN flag I sent (<i>I can guarantee that only port 22 is open</i>). Probably, my assumption is not right.
+                    Let's examine the headers for a few ports to see if I can differentiate between open and close ports.
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen3.png">
+                    <br/><br/>
+                    Closed ports were dropping <i>“RA”</i> flags instead of the expected <i>“SA”</i> for the <i>“S”</i> flag we sent. Expected a welcome mat, got a door slam.
+                    Checked for port 22 (<i>which is supposed to be open</i>). 
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen4.png">
+                    <br/><br/>
+                    Aha! Port 22 responded with the “SA” flag. So, lesson learned – we can’t just assume; gotta peek at those flags to know what’s up.
+                    So now we need to ensure that we actually check for the flags in the answered ports, that should help us figure out if a port is open.
+                    Let’s see how we can extract the flags portion. We know answers is a list so I’ll just iterate through it. 
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen5.png">
+                    <br/><br/>
+                    Essentially, <i>str(answer[i][1]["TCP"].flags)</i> would extract the flag the destination port sent, where <i>"i"</i> contains the information of the port that answered.
+                    <br/>Neat! Time for a coffee break. <i class="fa-solid fa-mug-hot fa-fade"></i>
+                    <br/>
+                </p>
+
+                <br/><h5><i class="fa-solid fa-user-ninja"></i>&nbsp;Coding</h5>
+
+                <p>
+                    Alright! Let's talk code now.
+                    <br/><br/><b>Libraries in the Ninja Toolkit</b>
+                    <br/>The script utilizes several Python libraries to equip our ninja with essential tools
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen6.png">
+                    <br/><br/>
+
+                    <i>argparse</i>: Handles command-line arguments, allowing users to specify the target, ports, and scanning type.
+                    <br/><i>ipaddress</i>: Facilitates working with IP addresses, crucial for defining target ranges.
+                    <br/><i>scapy</i>: Acts as the ninja's primary weapon, enabling the creation and sending of custom network packets for various scanning techniques.
+                    <br/><i>loguru</i>: Provides logging functionality, helping to keep track of the ninja's actions.
+                    <br/><i>concurrent.futures</i>: Empowers the ninja with multi-threading capabilities, enabling parallel execution of scanning tasks.
+                
+                    <br/>
+                    <br/><b>Ninja Moves</b>
+                    <br/>The script defines three key functions, each representing a different scanning technique.
+                    <br/><br/><b>1. tcpsyn_scan(target, port, scan_results)</b>
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen7.png">
+                    <br/><br/>
+    
+                    <i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Craft a TCP SYN packet using Scapy (IP(dst=str(target)) / TCP(flags="S", dport=port)).
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Send the packet and wait for responses (sr function).
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Extract information from the responses – port, service, and response flag.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;If the response flag indicates synchronization-acknowledgment ("SA"), consider the port open.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Record the findings in the scan_results list.
+
+                    <br/><br/><b>2. udp_scan(target, port, scan_results)</b>
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen8.png">
+                    <br/><br/>
+
+                    <i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Create a UDP packet using Scapy (IP(dst=str(target)) / UDP(dport=port)).
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Send the packet and wait for responses, setting a timeout of 2 seconds.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Extract information from the responses – port and service.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Record open ports and services in the scan_results list.
+
+                    <br/><br/><b>3. tcpack_scan(target, port, scan_results)</b>
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen9.png">
+                    <br/><br/>
+
+                    <i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Craft a TCP ACK packet using Scapy (IP(dst=str(target)) / TCP(flags="A", dport=port)).
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Send the packet and wait for responses.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Extract information from the responses – port and service.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;Record open ports and services in the scan_results list.
+
+                    <br/>
+                    <br/><b>Execution Logic</b>
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen10.png">
+                    <br/><br/>
+
+                    The execute_script function serves as the orchestrator, determining the scan type based on user input and deploying the appropriate ninja technique.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;The function starts by initializing an empty list called ports.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;It checks if the user provided a range of ports (e.g., "1-100") or a single port.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;If it's a range, it extracts the start and end ports and generates a list of ports within that range.
+                    <br/><i class="fa-solid fa-arrow-right fa-2xs"></i>&nbsp;If it's a single port, it appends that port to the list.
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen11.png">
+                    <br/><br/>
+
+                    The script initializes an empty list named scan_results to store the results of the scans.
+                    Based on the user's chosen scan type (args.t), it sets the protocol variable accordingly (e.g., "tcp", "udp", or "tcp-ack").
+                    It uses a list comprehension to dynamically generate a list called target_ports, which contains tuples of target IP addresses and ports.
+                    <br/>Scanning for multiple ports is <b>painfully</b> slow. Thus, to fasten the process, I used multithreading.
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen12.png">
+                    <br/><br/>
+
+                    The script utilizes the ThreadPoolExecutor from the <b>concurrent.futures</b> module to enable concurrent execution of scanning functions.
+                    <br/>It iterates through the target_ports list, submitting tasks to the executor based on the chosen scan type (args.t).
+                    <br/>For each target and port, it submits the appropriate scanning function (tcpsyn_scan, udp_scan, or tcpack_scan) along with the necessary parameters.
+                    <br/>The concurrent.futures.wait function ensures that the script waits for all tasks to complete before moving forward.
+
+                    <br/><br/><b>Presenting the output</b>
+
+                    <br/><br/>
+                    <img class="python-image" src="../static/assets/screen13.png">
+                    <br/><br/>
+
+                    Once all scanning tasks are completed, the script calls the print_results function to display the results.
+                    The print_results function takes the scan_results list and the protocol as parameters and prints the results in a neat table format.
+                </p>
+                
+                <br/><h5><i class="fa-solid fa-user-ninja"></i>&nbsp;Conclusion</h5>
+                <p>
+                    So, in a nutshell, PNMAP is like your digital ninja companion for exploring the hidden corners of networks. It's got these cool moves – TCP SYN, UDP, and TCP ACK scans – each with its unique style of checking if a port is open or not. The script is like the conductor of this ninja orchestra, taking your input, dynamically creating a hit-list of IP addresses and ports, and then unleashing its ninja army concurrently to get results faster.
+                </p>
+
+
+                <br/>
+                <a href="https://github.com/coflin/csci5020/tree/main/assignment16" class="myButton">View Project on GitHub &nbsp;&nbsp;<i class="fab fa-fw fa-github" style="padding:5px;"></i></a>
+                <br/><br/><br/><br/>
+            </div>
+        </center>
+    
+        <!-- Copyright Section-->
+        <div class="copyright py-4 text-center text-white">
+            <div class="container"><small>Copyright &copy; Sneha Irukuvajjula 2023</small></div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="../static/js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+   
+    </body>
+</html>
